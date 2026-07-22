@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vidhi Ahuja : Field Notes on Lost Engineering Knowledge</title>
   <meta name="description" content="A personal engineering notebook by Vidhi Ahuja. Six case studies examining undocumented manufacturing, tuning, tolerances, and design judgments that lived in one person's head.">
-  <link rel="stylesheet" href="layout_v23.css">
+  <link rel="stylesheet" href="layout_v24.css">
 </head>
 <body id="top" style="background-image: none;">
 
@@ -22,21 +22,21 @@
   </header>
 
   <main class="container">
-    <section class="hero" style="border-top: none; padding: 40px 0 0 0; min-height: calc(100vh - 80px); display: flex; align-items: center; position: relative;">
-      <div class="hero-split-layout" style="display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap;">
+    <section class="hero" id="hero-section">
+      <div class="hero-split-layout">
         <!-- Left Column: Content -->
-        <div class="hero-left-content" style="flex: 1.1; min-width: 320px; max-width: 600px; z-index: 2;">
+        <div class="hero-left-content">
           <div class="hero-intro-card">
             <h1>Mechanical engineering student focused on aerodynamics and propulsion R&D</h1>
           </div>
         </div>
         
         <!-- Right Column: Interactive CFD Rocket Simulation -->
-        <div class="hero-right-visual" style="flex: 0.9; min-width: 320px; height: 75vh; max-height: 700px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1;">
+        <div class="hero-right-visual">
           <!-- CFD Canvas -->
-          <canvas id="cfd-canvas" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: auto;"></canvas>
+          <canvas id="cfd-canvas"></canvas>
           <!-- Detailed Rocket SVG -->
-          <svg class="rocket-svg" viewBox="0 0 600 800" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 3;">
+          <svg class="rocket-svg" viewBox="0 0 600 800">
             <!-- Rocket body shadow (solid fill to hide background canvas lines) -->
             <path d="M 264 220 L 264 660 L 336 660 L 336 220 Z" fill="#0B0B0A" opacity="1"/>
             <path d="M 264 220 C 264 160, 280 120, 300 90 C 320 120, 336 160, 336 220 Z" fill="#0B0B0A" opacity="1"/>
