@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cascade : Vidhi Ahuja</title>
+  <meta name="description" content="Cascade: Analysis pipeline and pipeline-coupling protocols.">
+  <link rel="stylesheet" href="layout_v23.css">
+  <style>
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body id="top">
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="wordmark" id="wordmark-logo">Vidhi Ahuja</a>
+      <nav>
+        <a href="cascade.html" class="nav-large" id="nav-link-cascade">Cascade</a>
+        <a href="series.html" class="nav-large" id="nav-link-series">Series</a>
+        <a href="index.html#about" class="nav-large" id="nav-link-about">About</a>
+        <a href="https://drive.google.com/file/d/1234567890abcdefghijklmnopqrstuvwxyz/view?usp=sharing" target="_blank" class="nav-large" id="nav-link-resume">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 80px; padding-bottom: 120px;">
+    <div class="blueprint-bg"></div>
+    <div class="article-container">
+      <div style="margin-bottom: 48px;">
+        <span class="eyebrow">Projects</span>
+        <h1 style="font-size: 40px; margin-top: 12px; margin-bottom: 24px; font-family: 'Fraunces', serif; color: var(--text-headline);">Cascade</h1>
+        <div style="background-color: var(--bg-raised); border: 1px solid var(--hairline); border-left: 3px solid var(--accent); padding: 32px 40px; border-radius: 2px; text-align: left;">
+          <p style="font-size: 18px; line-height: 1.8; color: var(--text-primary); margin-bottom: 24px;">
+            Cascade is a physics-informed neural network built to reduce error in turbulence closure for coupled thermal-fluid-structural simulations (the class of problems where the governing equations are known but standard models still diverge from reality under combined loading).
+          </p>
+          <p style="font-size: 18px; line-height: 1.8; color: var(--text-primary); margin-bottom: 0;">
+            It's trained to correct, not replace, existing solvers, and it's being built with the same discipline as everything else on this site: every output will state its confidence, and where the model is extrapolating past validated conditions, it will say so rather than smooth it over.
+          </p>
+          <div style="display: flex; align-items: center; gap: 12px; margin-top: 32px; border-top: 1px solid var(--hairline); padding-top: 24px;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent); animation: pulse 2s infinite;"></span>
+            <span style="font-size: 14px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.05em; text-transform: uppercase;">Currently in development</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-left">Vidhi Ahuja</span>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" aria-label="Back to top" class="scroll-top-btn"></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('btn-back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

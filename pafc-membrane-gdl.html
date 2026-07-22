@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAFC membrane-GDL coupling: Folded Geometry : Vidhi Ahuja</title>
+  <meta name="description" content="Case study on the mechanical contact interface between the membrane and gas diffusion layer in phosphoric acid fuel cells.">
+  <link rel="stylesheet" href="layout_v23.css">
+</head>
+<body id="top">
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="wordmark" id="wordmark-logo">Vidhi Ahuja</a>
+      <nav>
+        <a href="cascade.html" class="nav-large" id="nav-link-cascade">Cascade</a>
+        <a href="series.html" class="nav-large" id="nav-link-series">Series</a>
+        <a href="index.html#about" class="nav-large" id="nav-link-about">About</a>
+        <a href="https://drive.google.com/file/d/1234567890abcdefghijklmnopqrstuvwxyz/view?usp=sharing" target="_blank" class="nav-large" id="nav-link-resume">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="blueprint-bg"></div>
+    <section class="hero" style="border-top: none;">
+      <span class="eyebrow" style="color: var(--accent);">PAFC membrane-GDL coupling (Ongoing)</span>
+      <h1>Folded geometry</h1>
+      <p style="margin-top: 8px;">Active Project · Subsystem: Electrochemical Stack / Mechanical Contact Interface</p>
+    </section>
+
+    <div class="article-body">
+      
+      <section class="article-section">
+        <span class="eyebrow">Part I</span>
+        <h2>Context: The compressed interface</h2>
+        <p class="article-p">
+          Phosphoric acid fuel cells (PAFC) operate in highly corrosive, high-temperature environments (typically around 150–200°C). Inside the cell stack, the catalyst-coated membrane must maintain uniform physical contact with the carbon-paper gas diffusion layer (GDL) to facilitate proton conduction and gas transport. 
+        </p>
+        <p class="article-p">
+          To achieve low electrical contact resistance, the entire cell stack is bolted together under heavy compressive load. However, the membrane is soft and elastomeric under operating temperatures, whereas the GDL is composed of rigid, porous, carbon fibers woven into a rough surface. The mechanical interaction between these two dissimilar materials forms a critical boundary layer that governs the cell's lifespan.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part II</span>
+        <h2>Known: Micro-locking and contact resistance</h2>
+        <p class="article-p">
+          During stack assembly, compression forces the rigid carbon fibers of the GDL to sink slightly into the surface of the catalyst layer and the polymer membrane<sup>[1]</sup>. This micro-mechanical indentation is beneficial in moderation: it increases the contact surface area, which decreases the electrical contact resistance, and creates a "micro-locking" effect that holds the membrane in place during thermal cycling.
+        </p>
+        <p class="article-p">
+          Currently, engineers manage this coupling by measuring the electrical resistance of the stack during assembly. Torque wrenches are used to apply a uniform bolt tension across the stack plate, which translates to a nominal pressure of roughly 1.5 to 2.0 MPa. This nominal bulk compression has been experimentally shown to minimize contact resistance without immediately crushing the GDL pores.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part III</span>
+        <h2>Missing: Localized fiber penetration margins</h2>
+        <p class="article-p">
+          What is completely missing is a localized mechanical coupling model. The nominal bulk pressure (1.5 MPa) is an average measurement; the local mechanical stress at individual GDL fiber contact points can exceed this average by orders of magnitude. 
+        </p>
+        <p class="article-p">
+          There are no documented guidelines mapping the depth of fiber penetration into the membrane as a function of temperature, aging time, or local GDL weave pattern. The threshold at which carbon fiber penetration transitions from micro-locking to localized membrane puncture (which allows gas crossovers and short-circuits) is unknown. Engineers adjust assembly torque based on trial-and-error measurements of old stacks, without quantitative safety factors for local shear deformation.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part IV</span>
+        <h2>Implication: The ionic resistance penalty</h2>
+        <p class="article-p">
+          Because the localized mechanical limits are undocumented and unmodeled, stack designs must incorporate a large factor of safety. Membranes are made thicker than electrochemically necessary (often over 150 microns) solely to resist localized fiber puncture<sup>[2]</sup>. 
+        </p>
+        <p class="article-p">
+          This added thickness increases the internal ionic resistance of the cell, penalizing the overall power density and increasing the cost of platinum catalyst loading. Until the relationship between fiber micro-structures, temperature, and local plastic deformation is quantified, engineers cannot optimize membrane thickness or design thinner, higher-power stacks without risking sudden mechanical failures.
+        </p>
+      </section>
+
+      <div class="article-nav">
+        <a href="series.html" class="text-link" id="back-to-all-series">← Back to all series</a>
+        <a href="f1-saturn-v.html" class="text-link" id="next-series-f1-saturn-v">Next series: F-1 / Saturn V →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-left">Vidhi Ahuja</span>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" aria-label="Back to top" class="scroll-top-btn"></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('btn-back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

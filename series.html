@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Series : Vidhi Ahuja</title>
+  <meta name="description" content="Personal engineering notebook series directory. Case studies on Saturn V, BMW M12/13, and fuel cell coupling.">
+  <link rel="stylesheet" href="layout_v23.css">
+</head>
+<body id="top">
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="wordmark" id="wordmark-logo">Vidhi Ahuja</a>
+      <nav>
+        <a href="cascade.html" class="nav-large" id="nav-link-cascade">Cascade</a>
+        <a href="series.html" class="nav-large" id="nav-link-series">Series</a>
+        <a href="index.html#about" class="nav-large" id="nav-link-about">About</a>
+        <a href="https://drive.google.com/file/d/1234567890abcdefghijklmnopqrstuvwxyz/view?usp=sharing" target="_blank" class="nav-large" id="nav-link-resume">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="blueprint-bg"></div>
+    <section class="hero" style="border-top: none;">
+      <span class="eyebrow">Directory</span>
+      <h1>Six entries, three engines</h1>
+      <p style="margin-top: 16px;">
+        Field notes on engineering knowledge that lived in one person's head and was never fully written down. Grouped by country and subject.
+      </p>
+    </section>
+
+    <section id="series" style="border-top: 1px solid var(--hairline);">
+      <div class="series-groups">
+        <div class="country-group">
+          <h3 class="country-name">Germany</h3>
+          <div class="series-list">
+            <article class="series-item">
+              <div class="series-row-top">
+                <h4 class="series-title serif-text">BMW M12/13</h4>
+                <span class="series-status">closed</span>
+              </div>
+              <p class="series-desc">Formula 1 turbo era, 1983-1987</p>
+              <div class="series-meta">Context · Known · Missing · Implication</div>
+              <a href="bmw-m12-13.html" class="text-link" id="read-bmw-m12-13">Read the series →</a>
+            </article>
+          </div>
+        </div>
+
+        <div class="country-group">
+          <h3 class="country-name">United States</h3>
+          <div class="series-list">
+            <article class="series-item">
+              <div class="series-row-top">
+                <h4 class="series-title serif-text">F-1 / Saturn V</h4>
+                <span class="series-status">closed</span>
+              </div>
+              <p class="series-desc">Injector plate stability, 1959-1966</p>
+              <div class="series-meta">Context · Known · Missing · Implication</div>
+              <a href="f1-saturn-v.html" class="text-link" id="read-f1-saturn-v">Read the series →</a>
+            </article>
+
+            <article class="series-item">
+              <div class="series-row-top">
+                <h4 class="series-title serif-text">PAFC membrane-GDL coupling</h4>
+                <span class="series-status" style="color: var(--accent);">ongoing</span>
+              </div>
+              <p class="series-desc">Folded geometry, current work</p>
+              <div class="series-meta">Context · Known · Missing · Implication</div>
+              <a href="pafc-membrane-gdl.html" class="text-link" id="read-pafc-membrane-gdl">Read the series →</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-left">Vidhi Ahuja</span>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" aria-label="Back to top" class="scroll-top-btn"></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('btn-back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

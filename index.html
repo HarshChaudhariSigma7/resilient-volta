@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vidhi Ahuja : Field Notes on Lost Engineering Knowledge</title>
+  <meta name="description" content="A personal engineering notebook by Vidhi Ahuja. Six case studies examining undocumented manufacturing, tuning, tolerances, and design judgments that lived in one person's head.">
+  <link rel="stylesheet" href="layout_v23.css">
+</head>
+<body id="top" style="background-image: none;">
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="wordmark" id="wordmark-logo">Vidhi Ahuja</a>
+      <nav>
+        <a href="cascade.html" class="nav-large" id="nav-link-cascade">Cascade</a>
+        <a href="series.html" class="nav-large" id="nav-link-series">Series</a>
+        <a href="#about" class="nav-large" id="nav-link-about">About</a>
+        <a href="https://drive.google.com/file/d/1234567890abcdefghijklmnopqrstuvwxyz/view?usp=sharing" target="_blank" class="nav-large" id="nav-link-resume">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" style="border-top: none; padding: 40px 0 0 0; min-height: calc(100vh - 80px); display: flex; align-items: center; position: relative;">
+      <div class="hero-split-layout" style="display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap;">
+        <!-- Left Column: Content -->
+        <div class="hero-left-content" style="flex: 1.1; min-width: 320px; max-width: 600px; z-index: 2;">
+          <div class="hero-intro-card">
+            <h1>Mechanical engineering student focused on aerodynamics and propulsion R&D</h1>
+          </div>
+        </div>
+        
+        <!-- Right Column: Interactive CFD Rocket Simulation -->
+        <div class="hero-right-visual" style="flex: 0.9; min-width: 320px; height: 75vh; max-height: 700px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1;">
+          <!-- CFD Canvas -->
+          <canvas id="cfd-canvas" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: auto;"></canvas>
+          <!-- Detailed Rocket SVG -->
+          <svg class="rocket-svg" viewBox="0 0 600 800" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 3;">
+            <!-- Rocket body shadow (solid fill to hide background canvas lines) -->
+            <path d="M 264 220 L 264 660 L 336 660 L 336 220 Z" fill="#0B0B0A" opacity="1"/>
+            <path d="M 264 220 C 264 160, 280 120, 300 90 C 320 120, 336 160, 336 220 Z" fill="#0B0B0A" opacity="1"/>
+            <polygon points="264,660 258,680 342,680 336,660" fill="#0B0B0A" opacity="1"/>
+
+            <!-- Main rocket stroke elements in white -->
+            <g stroke="#FFFFFF" stroke-width="1.25" fill="none">
+              <!-- Outer rocket shell -->
+              <path d="M 264 660 L 264 220 C 264 160, 280 120, 300 90 C 320 120, 336 160, 336 220 L 336 660" />
+              <line x1="264" y1="220" x2="336" y2="220" />
+              
+              <!-- Nose Cone panel line -->
+              <line x1="300" y1="90" x2="300" y2="220" stroke-dasharray="2,2" stroke-width="0.75" stroke="#9C9A90" />
+              
+              <!-- Roll thrusters ports -->
+              <circle cx="272" cy="235" r="2.5" fill="#FFFFFF"/>
+              <circle cx="328" cy="235" r="2.5" fill="#FFFFFF"/>
+              
+              <!-- Stage separation ring -->
+              <rect x="264" y="320" width="72" height="40" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              <path d="M 264 320 L 276 360 M 276 320 L 288 360 M 288 320 L 300 360 M 300 320 L 312 360 M 312 320 L 324 360 M 324 320 L 336 360" stroke="#5E5D56" stroke-width="0.75"/>
+              
+              <!-- Stage 1 fuel tank pipeline conduit -->
+              <rect x="328" y="360" width="4" height="295" fill="#131311" stroke="#FFFFFF" stroke-width="0.75" />
+              
+              <!-- Weld lands (horizontal seam lines on booster body) -->
+              <line x1="264" y1="410" x2="336" y2="410" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="264" y1="480" x2="336" y2="480" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="264" y1="550" x2="336" y2="550" stroke-width="0.75" stroke-dasharray="2,2"/>
+              <line x1="264" y1="610" x2="336" y2="610" stroke-width="0.75" stroke-dasharray="2,2"/>
+
+              <!-- Grid Fins -->
+              <!-- Left Grid Fin -->
+              <polygon points="264,240 240,245 240,265 264,258" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              <line x1="240" y1="255" x2="264" y2="250" stroke-width="0.5" stroke="#9C9A90"/>
+              <line x1="248" y1="246" x2="248" y2="262" stroke-width="0.5" stroke="#9C9A90"/>
+              <line x1="256" y1="244" x2="256" y2="260" stroke-width="0.5" stroke="#9C9A90"/>
+              <!-- Right Grid Fin -->
+              <polygon points="336,240 360,245 360,265 336,258" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              <line x1="336" y1="250" x2="360" y2="255" stroke-width="0.5" stroke="#9C9A90"/>
+              <line x1="344" y1="244" x2="344" y2="260" stroke-width="0.5" stroke="#9C9A90"/>
+              <line x1="352" y1="246" x2="352" y2="262" stroke-width="0.5" stroke="#9C9A90"/>
+
+              <!-- Folded Landing Legs -->
+              <path d="M 264 500 L 252 610 L 252 650 L 264 655 Z" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              <path d="M 336 500 L 348 610 L 348 650 L 336 655 Z" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              
+              <!-- Engine Skirt -->
+              <polygon points="264,660 258,680 342,680 336,660" fill="#131311" stroke="#FFFFFF" stroke-width="1.25"/>
+              
+              <!-- Sea-level Engine Nozzle Bells -->
+              <path d="M 264 680 C 264 695, 260 703, 256 708 L 284 708 C 280 703, 276 695, 276 680 Z" fill="#232320" stroke="#FFFFFF" stroke-width="1.25"/>
+              <path d="M 288 680 C 288 698, 282 708, 276 714 L 324 714 C 318 708, 312 698, 312 680 Z" fill="#232320" stroke="#FFFFFF" stroke-width="1.5"/>
+              <path d="M 324 680 C 324 695, 320 703, 316 708 L 344 708 C 340 703, 336 695, 336 680 Z" fill="#232320" stroke="#FFFFFF" stroke-width="1.25"/>
+              
+              <line x1="282" y1="670" x2="282" y2="680" stroke-width="1.5" stroke="#FFFFFF"/>
+              <line x1="318" y1="670" x2="318" y2="680" stroke-width="1.5" stroke="#FFFFFF"/>
+            </g>
+            
+            <!-- Technical callout labels -->
+            <g font-family="Inter, sans-serif" font-size="8.5" fill="#FFFFFF" font-weight="500" stroke="none" opacity="0.9">
+              <line x1="264" y1="150" x2="160" y2="150" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="264" cy="150" r="1.5" fill="#FFFFFF"/>
+              <text x="50" y="153" fill="#B7C4A9">PAYLOAD FAIRING</text>
+              
+              <line x1="240" y1="250" x2="150" y2="250" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="240" cy="250" r="1.5" fill="#FFFFFF"/>
+              <text x="50" y="253" fill="#B7C4A9">GRID FINS (TITANIUM)</text>
+              
+              <line x1="336" y1="340" x2="410" y2="340" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="336" cy="340" r="1.5" fill="#FFFFFF"/>
+              <text x="420" y="343" fill="#B7C4A9">INTERSTAGE SEPARATION</text>
+              
+              <line x1="330" y1="460" x2="410" y2="460" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="330" cy="460" r="1.5" fill="#FFFFFF"/>
+              <text x="420" y="463" fill="#B7C4A9">EXTERNAL PRESS. TUNNEL</text>
+              
+              <line x1="348" y1="580" x2="410" y2="580" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="348" cy="580" r="1.5" fill="#FFFFFF"/>
+              <text x="420" y="583" fill="#B7C4A9">FOLDED LANDING LEGS</text>
+              
+              <line x1="300" y1="700" x2="200" y2="700" stroke="#FFFFFF" stroke-width="0.5" opacity="0.6"/>
+              <circle cx="300" cy="700" r="1.5" fill="#FFFFFF"/>
+              <text x="75" y="703" fill="#B7C4A9">TRIPLE GIMBAL ENGINES</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" style="border-top: none; padding-top: 80px; padding-bottom: 120px;">
+      <div class="left-article-container">
+        
+        <!-- Section Title -->
+        <div class="section-title" style="margin-bottom: 32px;">
+          <span class="eyebrow">About</span>
+          <h2>A notebook, not a database</h2>
+        </div>
+
+        <!-- Intro Description -->
+        <p style="font-size: 18px; line-height: 1.8; color: var(--text-primary); margin-bottom: 24px;">
+          A growing collection of articles on propulsion, aerodynamics, engineering design, and the ideas behind them. Each piece is written to explain the reasoning, not just the conclusion.
+        </p>
+        <p style="font-size: 18px; line-height: 1.8; color: var(--text-primary); margin-bottom: 40px;">
+          Alongside the writing are browser-based engineering tools in development, from simulation utilities to design assistants that expose assumptions, confidence, and trade-offs instead of treating engineering as a black box.
+        </p>
+
+        <!-- Large Pull-Quote -->
+        <blockquote class="about-vertical-quote">
+          "The physics was never the mystery. The assumptions were."
+        </blockquote>
+
+        <!-- Methodology Heading -->
+        <div style="margin-top: 56px; margin-bottom: 24px;">
+          <h3 style="font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 500; color: var(--text-headline); margin: 0;">The Method</h3>
+          <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.6; margin-top: 8px; margin-bottom: 0;">
+            Every case study reads the historical and current record through a strict four-part structured frame:
+          </p>
+        </div>
+
+        <!-- Symmetrical Parameter Index Table -->
+        <div class="method-table">
+          
+          <div class="method-row">
+            <span class="method-row-num">01</span>
+            <span class="method-row-name">Known</span>
+            <span class="method-row-desc">The documented physics, telemetry, and established equations.</span>
+          </div>
+
+          <div class="method-row">
+            <span class="method-row-num">02</span>
+            <span class="method-row-name">Assumed</span>
+            <span class="method-row-desc">The judgments, tolerances, and tuning that lived in one person's head.</span>
+          </div>
+
+          <div class="method-row">
+            <span class="method-row-num">03</span>
+            <span class="method-row-name">Missing</span>
+            <span class="method-row-desc">The unwritten records, lost parameters, and undocumented steps.</span>
+          </div>
+
+          <div class="method-row">
+            <span class="method-row-num">04</span>
+            <span class="method-row-name">Implication</span>
+            <span class="method-row-desc">The consequence where standard models diverge from physical reality.</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-left">Vidhi Ahuja</span>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" aria-label="Back to top" class="scroll-top-btn"></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Floating Back to Top Button
+      var btn = document.getElementById('btn-back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // 2. CFD Streamlines Interactive Simulation
+      var canvas = document.getElementById('cfd-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      
+      var mouse = { x: 0, y: 0, active: false, r: 65 };
+      var obstacles = [
+        { x: 300, y: 110, r: 8 },
+        { x: 300, y: 140, r: 18 },
+        { x: 300, y: 170, r: 28 },
+        { x: 300, y: 200, r: 34 },
+        { x: 300, y: 230, r: 36 },
+        { x: 300, y: 280, r: 36 },
+        { x: 300, y: 330, r: 36 },
+        { x: 300, y: 380, r: 36 },
+        { x: 300, y: 430, r: 36 },
+        { x: 300, y: 480, r: 36 },
+        { x: 300, y: 530, r: 36 },
+        { x: 300, y: 580, r: 36 },
+        { x: 300, y: 630, r: 36 },
+        { x: 300, y: 660, r: 34 },
+        { x: 300, y: 680, r: 32 },
+        { x: 300, y: 700, r: 25 }
+      ];
+      
+      function resize() {
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      
+      canvas.addEventListener('mousemove', function(e) {
+        var rect = canvas.getBoundingClientRect();
+        mouse.x = (e.clientX - rect.left) * (600 / rect.width);
+        mouse.y = (e.clientY - rect.top) * (800 / rect.height);
+        mouse.active = true;
+      });
+      canvas.addEventListener('mouseleave', function() {
+        mouse.active = false;
+      });
+      canvas.addEventListener('touchmove', function(e) {
+        if (e.touches.length > 0) {
+          var rect = canvas.getBoundingClientRect();
+          mouse.x = (e.touches[0].clientX - rect.left) * (600 / rect.width);
+          mouse.y = (e.touches[0].clientY - rect.top) * (800 / rect.height);
+          mouse.active = true;
+        }
+      });
+      canvas.addEventListener('touchend', function() {
+        mouse.active = false;
+      });
+      
+      function getVelocityAt(x, y, time) {
+        var vx = 0;
+        var vy = 2; // base downward flow
+        
+        for (var i = 0; i < obstacles.length; i++) {
+          var obs = obstacles[i];
+          var dx = x - obs.x;
+          var dy = y - obs.y;
+          var r2 = dx*dx + dy*dy;
+          var R2 = obs.r * obs.r;
+          
+          if (r2 < R2) continue;
+          var r4 = r2 * r2;
+          vx += -4 * R2 * dx * dy / r4;
+          vy += -2 * R2 * (dy*dy - dx*dx) / r4;
+        }
+        
+        if (mouse.active) {
+          var dx = x - mouse.x;
+          var dy = y - mouse.y;
+          var r2 = dx*dx + dy*dy;
+          var R2 = mouse.r * mouse.r;
+          if (r2 > R2) {
+            var r4 = r2 * r2;
+            vx += -4 * R2 * dx * dy / r4;
+            vy += -2 * R2 * (dy*dy - dx*dx) / r4;
+          }
+        }
+        
+        vx += 0.08 * Math.sin(y * 0.015 - time * 0.005);
+        return { x: vx, y: vy };
+      }
+      
+      var time = 0;
+      function animate() {
+        time += 1;
+        ctx.clearRect(0, 0, 600, 800);
+        
+        ctx.save();
+        var rect = canvas.getBoundingClientRect();
+        ctx.scale(rect.width / 600, rect.height / 800);
+        
+        var lineCount = 38;
+        for (var i = 0; i <= lineCount; i++) {
+          var x = i * (600 / lineCount);
+          var y = 0;
+          
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          
+          for (var step = 0; step < 160; step++) {
+            var vel = getVelocityAt(x, y, time);
+            var mag = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+            var dx = vel.x / mag;
+            var dy = vel.y / mag;
+            
+            x += dx * 5;
+            y += dy * 5;
+            
+            // Push out of obstacles
+            for (var j = 0; j < obstacles.length; j++) {
+              var obs = obstacles[j];
+              var ox = x - obs.x;
+              var oy = y - obs.y;
+              var dist = Math.sqrt(ox*ox + oy*oy);
+              if (dist < obs.r + 2) {
+                x = obs.x + (ox / dist) * (obs.r + 2);
+              }
+            }
+            
+            // Push out of mouse
+            if (mouse.active) {
+              var ox = x - mouse.x;
+              var oy = y - mouse.y;
+              var dist = Math.sqrt(ox*ox + oy*oy);
+              if (dist < mouse.r) {
+                x = mouse.x + (ox / dist) * mouse.r;
+              }
+            }
+            
+            ctx.lineTo(x, y);
+          }
+          
+          // Draw static streamline
+          ctx.setLineDash([]);
+          ctx.strokeStyle = 'rgba(242, 241, 236, 0.04)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          
+          // Draw animated dashes flow
+          ctx.setLineDash([25, 100]);
+          ctx.lineDashOffset = -time * 0.8;
+          ctx.strokeStyle = 'rgba(183, 196, 169, 0.3)';
+          ctx.lineWidth = 1.25;
+          ctx.stroke();
+        }
+        
+        ctx.restore();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    });
+  </script>
+</body>
+</html>

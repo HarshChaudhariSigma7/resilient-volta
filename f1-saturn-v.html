@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F-1 / Saturn V: Injector Plate Stability : Vidhi Ahuja</title>
+  <meta name="description" content="Case study on the F-1 engine combustion instability and the undocumented empirical rules of copper injector baffles.">
+  <link rel="stylesheet" href="layout_v23.css">
+</head>
+<body id="top">
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="wordmark" id="wordmark-logo">Vidhi Ahuja</a>
+      <nav>
+        <a href="cascade.html" class="nav-large" id="nav-link-cascade">Cascade</a>
+        <a href="series.html" class="nav-large" id="nav-link-series">Series</a>
+        <a href="index.html#about" class="nav-large" id="nav-link-about">About</a>
+        <a href="https://drive.google.com/file/d/1234567890abcdefghijklmnopqrstuvwxyz/view?usp=sharing" target="_blank" class="nav-large" id="nav-link-resume">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="blueprint-bg"></div>
+    <section class="hero" style="border-top: none;">
+      <span class="eyebrow">F-1 / Saturn V (Closed)</span>
+      <h1>Injector plate stability</h1>
+      <p style="margin-top: 8px;">1959–1966 · Subsystem: Thrust Chamber Assembly / Combustion Dynamics</p>
+    </section>
+
+    <div class="article-body">
+      
+      <section class="article-section">
+        <span class="eyebrow">Part I</span>
+        <h2>Context: The combustion instability puzzle</h2>
+        <p class="article-p">
+          The Saturn V's F-1 rocket engine remains the most powerful single-nozzle liquid-propellant engine ever successfully flown. Developed by Rocketdyne under NASA supervision, the engine was designed to deliver 1.5 million pounds of thrust. The core challenge of scaling up a liquid oxygen/RP-1 rocket engine to this size was combustion instability. 
+        </p>
+        <p class="article-p">
+          During early test firings in 1959, the engine repeatedly experienced destructive high-frequency oscillations. Within milliseconds of ignition, pressure waves inside the massive combustion chamber would align with the chamber's acoustic resonant modes. These pressure fluctuations reached up to 100% of the mean chamber pressure, rapidly accelerating heat transfer and burning through the injector plate, causing catastrophic engine failures.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part II</span>
+        <h2>Known: Empirical trial and error</h2>
+        <p class="article-p">
+          Because the theoretical models of high-energy combustion dynamics were (and remain) incomplete, Rocketdyne engineers turned to empirical testing to solve the stability crisis. They developed the "bomb test" method: a small explosive charge was detonated inside the combustion chamber during a live firing to force the system into instability<sup>[1]</sup>. If the engine's design was sound, it would self-dampen the induced pressure oscillations and return to stable operation within 100 milliseconds.
+        </p>
+        <p class="article-p">
+          Over the course of 2,000 tests and dozens of injector face configurations, engineers iteratively settled on an injector plate design featuring concentric copper baffles<sup>[2]</sup>. These baffles protruded from the injector face into the combustion zone, physically dividing the combustion chamber into smaller, isolated acoustic cavities. This layout effectively prevented the acoustic waves from coordinating across the wider chamber and building destructive resonance.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part III</span>
+        <h2>Missing: The unwritten rules of baffles</h2>
+        <p class="article-p">
+          While the baffles worked, the precise mathematical design rules governing them were never formalised. The dimensions of the copper baffles (their specific heights, radial distribution, spacing, and local injector hole pattern adjustments) were finalized through trial-and-error by a small group of combustion specialists. 
+        </p>
+        <p class="article-p">
+          When changes were made, engineers relied heavily on qualitative visual analysis, studying soot deposits and thermal ablation patterns on copper faces after test runs. The critical tolerance margins that determined why one baffle configuration successfully dampened oscillations while a slightly different arrangement failed were never quantified or recorded. This design knowledge remained tribal, living in the minds of Rocketdyne's lead designers and never transitioning into a predictive engineering manual.
+        </p>
+      </section>
+
+      <section class="article-section">
+        <span class="eyebrow">Part IV</span>
+        <h2>Implication: The downstream cost of empirical shortcuts</h2>
+        <p class="article-p">
+          Because this knowledge was never documented as a predictive engineering framework, subsequent heavy-lift rocket programs could not use the F-1 baffle patterns as a direct reference point. When developing the Space Shuttle Main Engine (SSME) and modern liquid oxygen/methane boosters, engineers were forced to re-learn stability characteristics through new sets of empirical trials and custom-calibrated simulations<sup>[3]</sup>. 
+        </p>
+        <p class="article-p">
+          Modern computational fluid dynamics can simulate combustion chamber acoustics with high fidelity, but they still require experimental calibration constants derived from empirical trials. The lack of a written, physical rulebook for F-1 injector acoustics means that designing large-scale liquid rocket engines remains a semi-empirical art, adding millions of dollars and years of development time to modern propulsion programs.
+        </p>
+      </section>
+
+      <div class="article-nav">
+        <a href="series.html" class="text-link" id="back-to-all-series">← Back to all series</a>
+        <a href="bmw-m12-13.html" class="text-link" id="next-series-bmw-m12-13">Next series: BMW M12/13 →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-left">Vidhi Ahuja</span>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button id="btn-back-to-top" aria-label="Back to top" class="scroll-top-btn"></button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('btn-back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
