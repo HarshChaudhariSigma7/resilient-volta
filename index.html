@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vidhi Ahuja : Field Notes on Lost Engineering Knowledge</title>
   <meta name="description" content="A personal engineering notebook by Vidhi Ahuja. Six case studies examining undocumented manufacturing, tuning, tolerances, and design judgments that lived in one person's head.">
-  <link rel="stylesheet" href="layout_v27.css">
+  <link rel="stylesheet" href="layout_v28.css">
 </head>
 <body id="top" style="background-image: none;">
 
@@ -33,10 +33,17 @@
         
         <!-- Right Column: Interactive CFD Rocket Simulation -->
         <div class="hero-right-visual">
-          <!-- CFD Canvas -->
-          <canvas id="cfd-canvas"></canvas>
           <!-- Detailed Rocket SVG -->
           <svg class="rocket-svg" viewBox="0 0 600 800">
+            <defs>
+              <linearGradient id="cfd-flow-grad" x1="0" y1="0" x2="0" y2="150" gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+                <stop offset="0%" stop-color="#B7C4A9" stop-opacity="0.04"/>
+                <stop offset="50%" stop-color="#B7C4A9" stop-opacity="0.26"/>
+                <stop offset="100%" stop-color="#B7C4A9" stop-opacity="0.04"/>
+              </linearGradient>
+            </defs>
+            <!-- CFD Streamlines Group (rendered behind rocket graphic) -->
+            <g id="cfd-streamlines"></g>
             <!-- Rocket body shadow (solid fill to hide background canvas lines) -->
             <path d="M 264 220 L 264 660 L 336 660 L 336 220 Z" fill="#0B0B0A" opacity="1"/>
             <path d="M 264 220 C 264 160, 280 120, 300 90 C 320 120, 336 160, 336 220 Z" fill="#0B0B0A" opacity="1"/>
@@ -215,11 +222,21 @@
       });
 
       // 2. CFD Streamlines Interactive Simulation
-      var canvas = document.getElementById('cfd-canvas');
-      if (!canvas) return;
-      var ctx = canvas.getContext('2d');
+      var svg = document.querySelector('.rocket-svg');
+      var streamlineGroup = document.getElementById('cfd-streamlines');
+      if (!svg || !streamlineGroup) return;
       
       var mouse = { x: 0, y: 0, active: false, r: 70 };
+      var lineCount = 38;
+      var paths = [];
+      
+      // Dynamically populate SVG path elements for the streamlines
+      for (var i = 0; i <= lineCount; i++) {
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('class', 'cfd-line');
+        streamlineGroup.appendChild(path);
+        paths.push(path);
+      }
       
       function getRocketWidth(y) {
         if (y < 90) return 0;
@@ -240,64 +257,41 @@
         return 28 * Math.exp(-(y - 700) / 75);
       }
       
-      function resize() {
-        var dpr = window.devicePixelRatio || 1;
-        var rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-      }
-      window.addEventListener('resize', resize);
-      resize();
-      
-      canvas.addEventListener('mousemove', function(e) {
-        var rect = canvas.getBoundingClientRect();
+      svg.addEventListener('mousemove', function(e) {
+        var rect = svg.getBoundingClientRect();
         mouse.x = (e.clientX - rect.left) * (600 / rect.width);
         mouse.y = (e.clientY - rect.top) * (800 / rect.height);
         mouse.active = true;
       });
-      canvas.addEventListener('mouseleave', function() {
+      svg.addEventListener('mouseleave', function() {
         mouse.active = false;
       });
-      canvas.addEventListener('touchmove', function(e) {
+      svg.addEventListener('touchmove', function(e) {
         if (e.touches.length > 0) {
-          var rect = canvas.getBoundingClientRect();
+          var rect = svg.getBoundingClientRect();
           mouse.x = (e.touches[0].clientX - rect.left) * (600 / rect.width);
           mouse.y = (e.touches[0].clientY - rect.top) * (800 / rect.height);
           mouse.active = true;
         }
       });
-      canvas.addEventListener('touchend', function() {
+      svg.addEventListener('touchend', function() {
         mouse.active = false;
       });
       
       var time = 0;
       function animate() {
         time += 1;
-        ctx.clearRect(0, 0, 600, 800);
         
-        ctx.save();
-        var rect = canvas.getBoundingClientRect();
-        ctx.scale(rect.width / 600, rect.height / 800);
-        
-        // 1. Create a single, unified linear gradient that shifts downward to represent flow
-        var grad = ctx.createLinearGradient(0, 0, 0, 800);
-        for (var pct = 0; pct <= 1.0; pct += 0.05) {
-          var posY = pct * 800;
-          var intensity = Math.sin(posY * 0.035 - time * 0.12) * 0.5 + 0.5;
-          var alpha = 0.04 + 0.22 * intensity; // opacity range between 0.04 and 0.26
-          grad.addColorStop(pct, 'rgba(183, 196, 169, ' + alpha + ')');
+        // 1. Shift the linearGradient transform vertically to represent flow downward
+        var grad = document.getElementById('cfd-flow-grad');
+        if (grad) {
+          var offset = (time * 2.2) % 150;
+          grad.setAttribute('gradientTransform', 'translate(0, ' + offset + ')');
         }
         
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.0;
-        ctx.setLineDash([]);
-        
-        var lineCount = 38;
         for (var i = 0; i <= lineCount; i++) {
           var x_start = i * (600 / lineCount);
-          
-          ctx.beginPath();
+          var d = "";
           
           for (var step = 0; step <= 160; step++) {
             var y = step * 5;
@@ -337,17 +331,12 @@
               }
             }
             
-            if (step === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
+            d += (step === 0 ? "M" : "L") + x.toFixed(1) + "," + y;
           }
           
-          ctx.stroke();
+          paths[i].setAttribute('d', d);
         }
         
-        ctx.restore();
         requestAnimationFrame(animate);
       }
       animate();
