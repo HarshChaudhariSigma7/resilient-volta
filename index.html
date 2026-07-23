@@ -36,14 +36,44 @@
           <!-- Detailed Rocket SVG -->
           <svg class="rocket-svg" viewBox="0 0 600 800">
             <defs>
-              <linearGradient id="cfd-flow-grad" x1="0" y1="0" x2="0" y2="150" gradientUnits="userSpaceOnUse" spreadMethod="repeat">
-                <stop offset="0%" stop-color="#B7C4A9" stop-opacity="0.04"/>
-                <stop offset="50%" stop-color="#B7C4A9" stop-opacity="0.26"/>
-                <stop offset="100%" stop-color="#B7C4A9" stop-opacity="0.04"/>
+              <!-- 1. Static CFD velocity color gradient (Red at nose cone, Green at body, Blue in wake) -->
+              <linearGradient id="cfd-flow-grad" x1="0" y1="0" x2="0" y2="100%">
+                <!-- Free stream inlet (cyan) -->
+                <stop offset="0%" stop-color="#00b4d8"/>
+                <stop offset="10%" stop-color="#57c595"/>
+                
+                <!-- Nose cone shoulder acceleration (yellow/orange/red) -->
+                <stop offset="14%" stop-color="#fcbf49"/>
+                <stop offset="20%" stop-color="#fb8500"/>
+                <stop offset="26%" stop-color="#e63946"/>
+                
+                <!-- Cylinder body boundary layer (green) -->
+                <stop offset="36%" stop-color="#57c595"/>
+                <stop offset="52%" stop-color="#57c595"/>
+                <stop offset="68%" stop-color="#57c595"/>
+                
+                <!-- Exhaust nozzle expansion & wake (blue/dark blue) -->
+                <stop offset="82%" stop-color="#00b4d8"/>
+                <stop offset="88%" stop-color="#0077b6"/>
+                <stop offset="94%" stop-color="#073b4c"/>
+                <stop offset="100%" stop-color="#00b4d8"/>
               </linearGradient>
+
+              <!-- 2. Repeating mask gradient for simulating downward flow motion -->
+              <linearGradient id="cfd-mask-grad" x1="0" y1="0" x2="0" y2="150" gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+                <stop offset="50%" stop-color="#ffffff" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0.15"/>
+              </linearGradient>
+
+              <!-- 3. Mask applying the repeating gradient to the streamlines -->
+              <mask id="cfd-flow-mask">
+                <rect width="600" height="800" fill="url(#cfd-mask-grad)"/>
+              </mask>
             </defs>
-            <!-- CFD Streamlines Group (rendered behind rocket graphic) -->
-            <g id="cfd-streamlines"></g>
+
+            <!-- CFD Streamlines Group (with mask and rendered behind rocket) -->
+            <g id="cfd-streamlines" mask="url(#cfd-flow-mask)"></g>
             <!-- Rocket body shadow (solid fill to hide background canvas lines) -->
             <path d="M 264 220 L 264 660 L 336 660 L 336 220 Z" fill="#0B0B0A" opacity="1"/>
             <path d="M 264 220 C 264 160, 280 120, 300 90 C 320 120, 336 160, 336 220 Z" fill="#0B0B0A" opacity="1"/>
@@ -227,7 +257,7 @@
       if (!svg || !streamlineGroup) return;
       
       var mouse = { x: 0, y: 0, active: false, r: 70 };
-      var lineCount = 38;
+      var lineCount = 54;
       var paths = [];
       
       // Dynamically populate SVG path elements for the streamlines
@@ -282,10 +312,10 @@
       function animate() {
         time += 1;
         
-        // 1. Shift the linearGradient transform vertically to represent flow downward
-        var grad = document.getElementById('cfd-flow-grad');
+        // 1. Shift the linearGradient mask transform vertically to represent flow downward
+        var grad = document.getElementById('cfd-mask-grad');
         if (grad) {
-          var offset = (time * 2.2) % 150;
+          var offset = (time * 2.5) % 150;
           grad.setAttribute('gradientTransform', 'translate(0, ' + offset + ')');
         }
         

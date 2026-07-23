@@ -179,7 +179,8 @@ nav a:hover {
 .hero-right-visual .cfd-line {
   fill: none;
   stroke: url(#cfd-flow-grad);
-  stroke-width: 1.0px;
+  stroke-width: 0.65px;
+  opacity: 0.85;
 }
 
 .hero-right-visual .rocket-svg {
