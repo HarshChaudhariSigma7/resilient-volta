@@ -293,21 +293,20 @@
           }
         }
         
-        // 2. Mouse potential flow deflection
+        // 2. Softened mouse potential flow deflection (prevents excessive snap/deviation)
         if (mouse.active) {
           var dx = x - mouse.x;
           var dy = y - mouse.y;
           var r2 = dx*dx + dy*dy;
-          var R2 = mouse.r * mouse.r;
-          if (r2 > R2) {
-            var r4 = r2 * r2;
-            vx += -4 * R2 * dx * dy / r4;
-            vy += -2 * R2 * (dy*dy - dx*dx) / r4;
-          }
+          var R = mouse.r;
+          
+          var denominator = Math.pow(r2 + 1200, 2); // 1200 is softening parameter
+          vx += -1.5 * R * R * dx * dy / denominator;
+          vy += -0.75 * R * R * (dy*dy - dx*dx) / denominator;
         }
         
-        // 3. Laminar wave flutter over time
-        vx += 0.08 * Math.sin(y * 0.015 - time * 0.005);
+        // 3. Dynamic downward laminar flow wave propagation
+        vx += 1.6 * Math.sin(y * 0.035 - time * 0.1);
         return { x: vx, y: vy };
       }
       
@@ -360,14 +359,9 @@
             ctx.lineTo(x, y);
           }
           
-          // Draw solid, continuous streamlines (no dashes or dots)
-          if (i % 3 === 0) {
-            ctx.strokeStyle = 'rgba(183, 196, 169, 0.24)'; // Sage green highlight stream
-            ctx.lineWidth = 1.25;
-          } else {
-            ctx.strokeStyle = 'rgba(242, 241, 236, 0.08)'; // Warm white faint stream
-            ctx.lineWidth = 0.75;
-          }
+          // Draw solid, continuous streamlines with identical styling and color
+          ctx.strokeStyle = 'rgba(183, 196, 169, 0.22)'; // Unified sage green color
+          ctx.lineWidth = 1.0;
           ctx.setLineDash([]);
           ctx.stroke();
         }
