@@ -221,6 +221,25 @@
       
       var mouse = { x: 0, y: 0, active: false, r: 70 };
       
+      function getRocketWidth(y) {
+        if (y < 90) return 0;
+        if (y >= 90 && y < 220) {
+          // Tangent ogive nose cone
+          var t = (y - 90) / 130;
+          return 36 * Math.sin(t * Math.PI / 2);
+        }
+        if (y >= 220 && y < 660) {
+          // Cylindrical booster body
+          return 36;
+        }
+        if (y >= 660 && y < 700) {
+          // Engine nozzle flare
+          return 36 - ((y - 660) / 40) * 8;
+        }
+        // Wake decay below the engine
+        return 28 * Math.exp(-(y - 700) / 75);
+      }
+      
       function resize() {
         var dpr = window.devicePixelRatio || 1;
         var rect = canvas.getBoundingClientRect();
@@ -282,11 +301,21 @@
           
           for (var step = 0; step <= 160; step++) {
             var y = step * 5;
-            var x = x_start;
+            var w = getRocketWidth(y);
             
-            // 2. Gentle Gaussian displacement around the mouse cursor
+            // 2. Aerodynamic deflection around rocket hull
+            var x = x_start;
+            if (w > 0) {
+              if (x_start <= 300) {
+                x = x_start * (300 - w) / 300;
+              } else {
+                x = 600 - (600 - x_start) * (300 - w) / 300;
+              }
+            }
+            
+            // 3. Gentle Gaussian displacement around the mouse cursor
             if (mouse.active) {
-              var dx = x_start - mouse.x;
+              var dx = x - mouse.x;
               var dy = y - mouse.y;
               var d2 = dx*dx + dy*dy;
               
@@ -296,6 +325,16 @@
               
               // Push lines smoothly left or right away from the cursor
               x += Math.sign(dx || 0.1) * force;
+              
+              // Prevent streamlines from clipping into the rocket boundary
+              if (w > 0) {
+                var limit = 300 + Math.sign(x_start - 300) * (w + 2);
+                if (x_start <= 300) {
+                  if (x > limit) x = limit;
+                } else {
+                  if (x < limit) x = limit;
+                }
+              }
             }
             
             if (step === 0) {
