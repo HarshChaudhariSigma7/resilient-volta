@@ -219,29 +219,7 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       
-      var mouse = { x: 0, y: 0, active: false, r: 65 };
-      
-      function getRocketWidthAndDerivative(y) {
-        var w = 0;
-        var dw = 0;
-        
-        if (y >= 90 && y < 220) {
-          // Nose Cone (tangent ogive profile modeled as a quarter sine wave)
-          var t = (y - 90) / 130;
-          w = 36 * Math.sin(t * Math.PI / 2);
-          dw = 36 * (Math.PI / 260) * Math.cos(t * Math.PI / 2);
-        } else if (y >= 220 && y < 660) {
-          // Main cylindrical booster body (flat parallel walls)
-          w = 36;
-          dw = 0;
-        } else if (y >= 660 && y < 700) {
-          // Engine nozzle flared taper
-          w = 36 - ((y - 660) / 40) * 8;
-          dw = -8 / 40; // -0.2
-        }
-        
-        return { w: w, dw: dw };
-      }
+      var mouse = { x: 0, y: 0, active: false, r: 70 };
       
       function resize() {
         var dpr = window.devicePixelRatio || 1;
@@ -274,42 +252,6 @@
         mouse.active = false;
       });
       
-      function getVelocityAt(x, y, time) {
-        var vx = 0;
-        var vy = 2; // base downward flow
-        
-        // 1. Analytical rocket boundary deflection (perfect slip condition)
-        var geom = getRocketWidthAndDerivative(y);
-        var w = geom.w;
-        var dw = geom.dw;
-        
-        if (w > 0) {
-          if (x <= 300) {
-            // Left side channel compression
-            vx += -vy * x * dw / (300 - w);
-          } else {
-            // Right side channel compression
-            vx += vy * (600 - x) * dw / (300 - w);
-          }
-        }
-        
-        // 2. Softened mouse potential flow deflection (prevents excessive snap/deviation)
-        if (mouse.active) {
-          var dx = x - mouse.x;
-          var dy = y - mouse.y;
-          var r2 = dx*dx + dy*dy;
-          var R = mouse.r;
-          
-          var denominator = Math.pow(r2 + 1200, 2); // 1200 is softening parameter
-          vx += -1.5 * R * R * dx * dy / denominator;
-          vy += -0.75 * R * R * (dy*dy - dx*dx) / denominator;
-        }
-        
-        // 3. Dynamic downward laminar flow wave propagation
-        vx += 1.6 * Math.sin(y * 0.035 - time * 0.1);
-        return { x: vx, y: vy };
-      }
-      
       var time = 0;
       function animate() {
         time += 1;
@@ -319,50 +261,50 @@
         var rect = canvas.getBoundingClientRect();
         ctx.scale(rect.width / 600, rect.height / 800);
         
+        // 1. Create a single, unified linear gradient that shifts downward to represent flow
+        var grad = ctx.createLinearGradient(0, 0, 0, 800);
+        for (var pct = 0; pct <= 1.0; pct += 0.05) {
+          var posY = pct * 800;
+          var intensity = Math.sin(posY * 0.035 - time * 0.12) * 0.5 + 0.5;
+          var alpha = 0.04 + 0.22 * intensity; // opacity range between 0.04 and 0.26
+          grad.addColorStop(pct, 'rgba(183, 196, 169, ' + alpha + ')');
+        }
+        
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.0;
+        ctx.setLineDash([]);
+        
         var lineCount = 38;
         for (var i = 0; i <= lineCount; i++) {
-          var x = i * (600 / lineCount);
-          var y = 0;
+          var x_start = i * (600 / lineCount);
           
           ctx.beginPath();
-          ctx.moveTo(x, y);
           
-          for (var step = 0; step < 160; step++) {
-            var vel = getVelocityAt(x, y, time);
-            var mag = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
-            var dx = vel.x / mag;
-            var dy = vel.y / mag;
+          for (var step = 0; step <= 160; step++) {
+            var y = step * 5;
+            var x = x_start;
             
-            x += dx * 5;
-            y += dy * 5;
-            
-            // Push out of rocket boundaries
-            var geom = getRocketWidthAndDerivative(y);
-            var w = geom.w;
-            if (w > 0) {
-              var rx = x - 300;
-              if (Math.abs(rx) < w + 2) {
-                x = 300 + Math.sign(rx) * (w + 2);
-              }
-            }
-            
-            // Push out of mouse
+            // 2. Gentle Gaussian displacement around the mouse cursor
             if (mouse.active) {
-              var ox = x - mouse.x;
-              var oy = y - mouse.y;
-              var dist = Math.sqrt(ox*ox + oy*oy);
-              if (dist < mouse.r) {
-                x = mouse.x + (ox / dist) * mouse.r;
-              }
+              var dx = x_start - mouse.x;
+              var dy = y - mouse.y;
+              var d2 = dx*dx + dy*dy;
+              
+              var sigma2 = 4900; // spread radius squared (70^2)
+              var max_displacement = 28; // maximum bend in pixels
+              var force = Math.exp(-d2 / (2 * sigma2)) * max_displacement;
+              
+              // Push lines smoothly left or right away from the cursor
+              x += Math.sign(dx || 0.1) * force;
             }
             
-            ctx.lineTo(x, y);
+            if (step === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
           }
           
-          // Draw solid, continuous streamlines with identical styling and color
-          ctx.strokeStyle = 'rgba(183, 196, 169, 0.22)'; // Unified sage green color
-          ctx.lineWidth = 1.0;
-          ctx.setLineDash([]);
           ctx.stroke();
         }
         
