@@ -220,24 +220,28 @@
       var ctx = canvas.getContext('2d');
       
       var mouse = { x: 0, y: 0, active: false, r: 65 };
-      var obstacles = [
-        { x: 300, y: 110, r: 8 },
-        { x: 300, y: 140, r: 18 },
-        { x: 300, y: 170, r: 28 },
-        { x: 300, y: 200, r: 34 },
-        { x: 300, y: 230, r: 36 },
-        { x: 300, y: 280, r: 36 },
-        { x: 300, y: 330, r: 36 },
-        { x: 300, y: 380, r: 36 },
-        { x: 300, y: 430, r: 36 },
-        { x: 300, y: 480, r: 36 },
-        { x: 300, y: 530, r: 36 },
-        { x: 300, y: 580, r: 36 },
-        { x: 300, y: 630, r: 36 },
-        { x: 300, y: 660, r: 34 },
-        { x: 300, y: 680, r: 32 },
-        { x: 300, y: 700, r: 25 }
-      ];
+      
+      function getRocketWidthAndDerivative(y) {
+        var w = 0;
+        var dw = 0;
+        
+        if (y >= 90 && y < 220) {
+          // Nose Cone (tangent ogive profile modeled as a quarter sine wave)
+          var t = (y - 90) / 130;
+          w = 36 * Math.sin(t * Math.PI / 2);
+          dw = 36 * (Math.PI / 260) * Math.cos(t * Math.PI / 2);
+        } else if (y >= 220 && y < 660) {
+          // Main cylindrical booster body (flat parallel walls)
+          w = 36;
+          dw = 0;
+        } else if (y >= 660 && y < 700) {
+          // Engine nozzle flared taper
+          w = 36 - ((y - 660) / 40) * 8;
+          dw = -8 / 40; // -0.2
+        }
+        
+        return { w: w, dw: dw };
+      }
       
       function resize() {
         var dpr = window.devicePixelRatio || 1;
@@ -274,19 +278,22 @@
         var vx = 0;
         var vy = 2; // base downward flow
         
-        for (var i = 0; i < obstacles.length; i++) {
-          var obs = obstacles[i];
-          var dx = x - obs.x;
-          var dy = y - obs.y;
-          var r2 = dx*dx + dy*dy;
-          var R2 = obs.r * obs.r;
-          
-          if (r2 < R2) continue;
-          var r4 = r2 * r2;
-          vx += -4 * R2 * dx * dy / r4;
-          vy += -2 * R2 * (dy*dy - dx*dx) / r4;
+        // 1. Analytical rocket boundary deflection (perfect slip condition)
+        var geom = getRocketWidthAndDerivative(y);
+        var w = geom.w;
+        var dw = geom.dw;
+        
+        if (w > 0) {
+          if (x <= 300) {
+            // Left side channel compression
+            vx += -vy * x * dw / (300 - w);
+          } else {
+            // Right side channel compression
+            vx += vy * (600 - x) * dw / (300 - w);
+          }
         }
         
+        // 2. Mouse potential flow deflection
         if (mouse.active) {
           var dx = x - mouse.x;
           var dy = y - mouse.y;
@@ -299,6 +306,7 @@
           }
         }
         
+        // 3. Laminar wave flutter over time
         vx += 0.08 * Math.sin(y * 0.015 - time * 0.005);
         return { x: vx, y: vy };
       }
@@ -329,14 +337,13 @@
             x += dx * 5;
             y += dy * 5;
             
-            // Push out of obstacles
-            for (var j = 0; j < obstacles.length; j++) {
-              var obs = obstacles[j];
-              var ox = x - obs.x;
-              var oy = y - obs.y;
-              var dist = Math.sqrt(ox*ox + oy*oy);
-              if (dist < obs.r + 2) {
-                x = obs.x + (ox / dist) * (obs.r + 2);
+            // Push out of rocket boundaries
+            var geom = getRocketWidthAndDerivative(y);
+            var w = geom.w;
+            if (w > 0) {
+              var rx = x - 300;
+              if (Math.abs(rx) < w + 2) {
+                x = 300 + Math.sign(rx) * (w + 2);
               }
             }
             
@@ -353,17 +360,15 @@
             ctx.lineTo(x, y);
           }
           
-          // Draw static streamline
+          // Draw solid, continuous streamlines (no dashes or dots)
+          if (i % 3 === 0) {
+            ctx.strokeStyle = 'rgba(183, 196, 169, 0.24)'; // Sage green highlight stream
+            ctx.lineWidth = 1.25;
+          } else {
+            ctx.strokeStyle = 'rgba(242, 241, 236, 0.08)'; // Warm white faint stream
+            ctx.lineWidth = 0.75;
+          }
           ctx.setLineDash([]);
-          ctx.strokeStyle = 'rgba(242, 241, 236, 0.04)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          
-          // Draw animated dashes flow
-          ctx.setLineDash([25, 100]);
-          ctx.lineDashOffset = -time * 0.8;
-          ctx.strokeStyle = 'rgba(183, 196, 169, 0.3)';
-          ctx.lineWidth = 1.25;
           ctx.stroke();
         }
         
